@@ -1,0 +1,2 @@
+# Protect .src directory contents from accidental modifications
+# Only system files should be here, updated via git pull
