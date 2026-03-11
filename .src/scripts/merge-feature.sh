@@ -128,11 +128,11 @@ main() {
     if [[ "$change" != "null" ]] && [[ -n "$change" ]]; then
         log_info "Archiving change: $change"
         if command -v openspec &>/dev/null; then
-            openspec archive --change "$change" || {
-                log_warn "openspec archive failed. Archive manually: openspec archive --change $change"
+            openspec archive "$change" -y || {
+                log_warn "openspec archive failed. Archive manually: openspec archive $change"
             }
         else
-            log_warn "openspec not found, skipping archive. Run manually: openspec archive --change $change"
+            log_warn "openspec not found, skipping archive. Run manually: openspec archive $change"
         fi
     fi
 
