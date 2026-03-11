@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# merge-feature.sh - Merge a completed feature to main (AWP v2)
+# merge-feature.sh - Merge a completed feature to its base branch (AWP v2)
 
 set -euo pipefail
 
@@ -10,7 +10,7 @@ usage() {
     cat << EOF
 Usage: $0 <feature-name>
 
-Merge a completed feature branch back to the main branch.
+Merge a completed feature branch back to its base branch.
 
 Arguments:
   feature-name    Name of the feature to merge
@@ -61,9 +61,13 @@ main() {
         exit 1
     fi
 
-    # Get main branch
-    local main_branch
-    main_branch="$(get_main_branch)" || exit 1
+    # Get base branch from state (fallback to main/master for backward compat)
+    local base_branch
+    base_branch="$(read_state_field "$feature" '.base_branch // empty' 2>/dev/null)"
+    if [[ -z "$base_branch" ]]; then
+        base_branch="$(get_main_branch)" || exit 1
+        log_warn "No base_branch in state, falling back to: $base_branch"
+    fi
 
     # Check for uncommitted changes in main repo
     if ! git diff-index --quiet HEAD --; then
@@ -72,10 +76,10 @@ main() {
         exit 1
     fi
 
-    # Rebase feature branch onto main
-    log_info "Rebasing $branch_name onto $main_branch..."
+    # Rebase feature branch onto base branch
+    log_info "Rebasing $branch_name onto $base_branch..."
     if [[ -d "$worktree_path" ]]; then
-        (cd "$worktree_path" && git rebase "$main_branch") || {
+        (cd "$worktree_path" && git rebase "$base_branch") || {
             log_error "Rebase failed. Conflicts detected."
             log_error "Resolve conflicts in $worktree_path, then re-run 'awp merge $feature'"
             log_warn "After resolving, re-run '/awp-merge $feature'"
@@ -85,13 +89,13 @@ main() {
     fi
 
     # Switch to main and merge
-    log_info "Merging $branch_name into $main_branch..."
-    git checkout "$main_branch"
+    log_info "Merging $branch_name into $base_branch..."
+    git checkout "$base_branch"
 
     if git merge --ff-only "$branch_name"; then
-        log_success "Successfully merged $branch_name into $main_branch (fast-forward)"
+        log_success "Successfully merged $branch_name into $base_branch (fast-forward)"
     elif git merge --no-ff "$branch_name" -m "Merge feature: $feature"; then
-        log_success "Successfully merged $branch_name into $main_branch"
+        log_success "Successfully merged $branch_name into $base_branch"
     else
         log_error "Merge failed. Please resolve conflicts manually."
         exit 1

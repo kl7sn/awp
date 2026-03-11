@@ -43,8 +43,9 @@ show_state() {
     local proj_root
     proj_root="$(project_root)" || exit 1
     local worktree_path="$proj_root/worktrees/$feature"
-    local change
+    local change base_branch
     change="$(echo "$state" | jq -r '.change // empty')"
+    base_branch="$(echo "$state" | jq -r '.base_branch // empty')"
 
     jq -n \
         --arg feature "$feature" \
@@ -54,6 +55,7 @@ show_state() {
         --arg group_name "$group_name" \
         --arg worktree "$worktree_path" \
         --arg change "$change" \
+        --arg base_branch "$base_branch" \
         --argjson groups "$(echo "$state" | jq '.groups')" \
         '{
             feature: $feature,
@@ -63,6 +65,7 @@ show_state() {
             group_name: $group_name,
             worktree: $worktree,
             change: $change,
+            base_branch: $base_branch,
             groups: $groups
         }'
 }
@@ -89,7 +92,7 @@ advance_group() {
             .status = \"done\"
         "
         log_success "All groups complete! Feature is ready to merge."
-        log_info "Use '/awp-merge $feature' to merge to main."
+        log_info "Use '/awp-merge $feature' to merge to base branch."
     else
         update_state_field "$feature" "
             .groups[$((current_group - 1))].status = \"done\" |

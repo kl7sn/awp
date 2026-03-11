@@ -53,7 +53,7 @@ main() {
     else
         cat > "$skill_md" << 'EOF'
 ---
-description: AWP - Feature-driven automation with unified propose/run/merge pipeline
+description: AWP - Feature-driven automation with unified propose/apply/merge pipeline
 ---
 
 # AWP: Feature-Driven Pipeline

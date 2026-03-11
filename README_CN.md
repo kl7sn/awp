@@ -5,6 +5,7 @@
 ## 核心理念
 
 - **1 个 feature = 1 个分支 = 1 个 worktree** —— 干净隔离，统一命名
+- **可配置基础分支** —— feature 默认从当前分支创建，合并回基础分支，再通过 PR 合入 main
 - **Executor 先审查再实现** —— 展示任务摘要，等待你确认，然后执行
 - **Task group 驱动执行** —— tasks.md 中的每个 `## N. 标题` 是一个独立的审查单元
 - **统一命令体系** —— `awp` 是规划、执行、交付的唯一入口
@@ -23,9 +24,10 @@ awp init
 
 ```
 awp explore                              # 探索想法（可选）
-awp propose "用户认证系统"                  # 设计 + 规格 + 任务拆分 + 自动创建
-awp apply auth                             # 逐组执行（审查 → 确认 → 实现）
-awp merge auth                           # Rebase + 合并 + 清理
+awp propose "用户认证系统"                  # 设计 + 规格 + 任务拆分 + 自动创建（基础分支：当前分支）
+awp propose "认证" --base develop          # 同上，但从 develop 分支创建
+awp apply auth                           # 逐组执行（审查 → 确认 → 实现）
+awp merge auth                           # Rebase + 合并到基础分支 + 清理
 ```
 
 ```
@@ -64,10 +66,10 @@ awp propose
 
 | 命令 | 说明 |
 |------|------|
-| `awp propose "描述"` | 生成设计文档、规格和任务拆分 |
-| `awp create <feature> [--change <name>]` | 创建 worktree + 分支，关联 change |
+| `awp propose "描述" [--base <branch>]` | 生成设计文档、规格和任务拆分 |
+| `awp create <feature> [--change <name>] [--base <branch>]` | 创建 worktree + 分支，关联 change |
 | `awp apply <feature>` | 逐组执行任务（审查 + 确认 + 实现） |
-| `awp merge <feature>` | Rebase main、合并、清理 |
+| `awp merge <feature>` | Rebase 基础分支、合并、清理 |
 | `awp delete <feature> [--force]` | 丢弃 feature（worktree + 分支 + 状态） |
 | `awp status` | 查看所有 feature 的分组进度和状态 |
 | `awp explore` | 探索模式，在提案前思考方案 |
@@ -88,7 +90,7 @@ payment-flow         2/3      done         payment-flow
 user-profile         1/1      done         user-profile
 ```
 
-合并顺序由你决定。合并前 AWP 自动 rebase main，如果有冲突，解决后重新运行。
+合并顺序由你决定。合并前 AWP 自动 rebase 基础分支，如果有冲突，解决后重新运行。所有 feature 合并完成后，从基础分支向 main 提交 PR。
 
 ## 目录结构
 

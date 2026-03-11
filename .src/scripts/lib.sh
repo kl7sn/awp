@@ -96,6 +96,20 @@ get_main_branch() {
     fi
 }
 
+# Get the current branch name
+get_current_branch() {
+    local branch
+    branch="$(git rev-parse --abbrev-ref HEAD 2>/dev/null)" || {
+        log_error "Could not determine current branch"
+        return 1
+    }
+    if [[ "$branch" == "HEAD" ]]; then
+        log_error "Detached HEAD state, cannot determine branch"
+        return 1
+    fi
+    echo "$branch"
+}
+
 # Check if there are uncommitted changes in a worktree
 has_uncommitted_changes() {
     local worktree_path="$1"
@@ -199,12 +213,18 @@ init_state() {
     local branch="$2"
     local change="${3:-}"
     local groups_json="${4:-[]}"
+    local base_branch="${5:-}"
 
     local source_field="null"
     local change_field="null"
     if [[ -n "$change" ]]; then
         source_field='"openspec"'
         change_field="\"$change\""
+    fi
+
+    # Default base branch to current branch if not specified
+    if [[ -z "$base_branch" ]]; then
+        base_branch="$(get_current_branch)" || return 1
     fi
 
     local json
@@ -214,6 +234,7 @@ init_state() {
   "current_group": 1,
   "groups": $groups_json,
   "branch": "$branch",
+  "base_branch": "$base_branch",
   "source": $source_field,
   "change": $change_field,
   "created_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"

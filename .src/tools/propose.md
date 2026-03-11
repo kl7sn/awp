@@ -23,9 +23,15 @@ Generate a complete feature proposal with design, specifications, and implementa
    - `tasks.md` — implementation task breakdown (grouped by `## N. Title`)
 4. **Auto-creates the feature**: runs `create-feature.sh <change-name>` which:
    - Creates worktree at `worktrees/<change-name>/`
-   - Creates branch `<change-name>`
+   - Creates branch `<change-name>` from the base branch
    - Parses tasks.md into task groups
    - Initializes state.json linked to the change
+
+## Base branch
+
+- `--base <branch>`: use the specified branch as base
+- Not specified: use the **current branch** as base
+- The base branch is recorded in state.json and used by `awp merge` as the merge target
 
 ## Standard execution
 
@@ -40,7 +46,7 @@ openspec instructions <artifact-id> --change "<change-name>" --json
 openspec status --change "<change-name>" --json
 
 # 3. Auto-create feature after all artifacts are done
-bash .claude/skills/awp/.src/scripts/create-feature.sh "<change-name>"
+bash .claude/skills/awp/.src/scripts/create-feature.sh "<change-name>" [--base <branch>]
 ```
 
 ## Success indicators
@@ -49,11 +55,11 @@ bash .claude/skills/awp/.src/scripts/create-feature.sh "<change-name>"
 - All artifacts generated: proposal.md, design.md, specs/*.md, tasks.md
 - Worktree created at `worktrees/<change-name>/`
 - Branch created: `<change-name>`
-- State initialized: `.awp/features/<change-name>/state.json`
+- State initialized: `.awp/features/<change-name>/state.json` with correct `base_branch`
 
 ## After propose
 
-Feature is ready to run immediately:
+Feature is ready to apply immediately:
 
 ```
 awp apply <change-name>
@@ -61,7 +67,6 @@ awp apply <change-name>
 
 ## Notes
 
-- Replaces `opsx:propose`
 - Change name = feature name = branch name (unified naming)
 - Task groups (## headings) in tasks.md define the execution group boundaries
 - Each group should be a cohesive, independently verifiable unit of work

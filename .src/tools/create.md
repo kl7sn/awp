@@ -16,7 +16,7 @@ Create a git worktree and branch for a feature, with optional OpenSpec change as
 
 1. Validates the feature name (alphanumeric, hyphens, underscores)
 2. Creates a single git worktree at `worktrees/<feature>/`
-3. Creates a branch named `<feature>` from the main branch
+3. Creates a branch named `<feature>` from the base branch (default: current branch, or `--base <branch>`)
 4. If `--change` is specified:
    - Reads `openspec/changes/<change-name>/tasks.md`
    - Parses task groups from `## N. Title` headings
@@ -28,11 +28,13 @@ Create a git worktree and branch for a feature, with optional OpenSpec change as
 ```bash
 bash .claude/skills/awp/.src/scripts/create-feature.sh <feature-name>
 bash .claude/skills/awp/.src/scripts/create-feature.sh <feature-name> --change <change-name>
+bash .claude/skills/awp/.src/scripts/create-feature.sh <feature-name> --base <branch>
 ```
 
 Example:
 ```bash
 bash .claude/skills/awp/.src/scripts/create-feature.sh config-page --change config-page
+bash .claude/skills/awp/.src/scripts/create-feature.sh auth --base develop
 ```
 
 ## Success indicators
@@ -52,3 +54,5 @@ bash .claude/skills/awp/.src/scripts/create-feature.sh config-page --change conf
 
 - Creates exactly 1 worktree per feature (not 3 like v1)
 - Feature state is stored in `.awp/features/`, separate from the worktree
+- `--base` specifies which branch to create from; merge will target this branch
+- Base branch is saved in state.json as `base_branch`

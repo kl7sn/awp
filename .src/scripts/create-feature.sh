@@ -8,17 +8,19 @@ source "$SCRIPT_DIR/lib.sh"
 
 usage() {
     cat << EOF
-Usage: $0 <feature-name> [--change <change-name>]
+Usage: $0 <feature-name> [--change <change-name>] [--base <branch>]
 
 Create a worktree and branch for a feature.
 
 Arguments:
   feature-name              Name of the feature
   --change <change-name>    Associate with an OpenSpec change (optional)
+  --base <branch>           Base branch to create from (default: current branch)
 
 Example:
   $0 auth-feature
   $0 config-page --change config-page
+  $0 auth-feature --base develop
 EOF
     exit 1
 }
@@ -32,10 +34,15 @@ main() {
     shift
 
     local change=""
+    local base_branch=""
     while [[ $# -gt 0 ]]; do
         case "$1" in
             --change)
                 change="$2"
+                shift 2
+                ;;
+            --base)
+                base_branch="$2"
                 shift 2
                 ;;
             *)
@@ -79,18 +86,25 @@ main() {
 
     log_info "Creating feature: $feature"
 
+    # Resolve base branch (default: current branch)
+    if [[ -z "$base_branch" ]]; then
+        base_branch="$(get_current_branch)" || exit 1
+    else
+        if ! git rev-parse --verify "$base_branch" >/dev/null 2>&1; then
+            log_error "Base branch not found: $base_branch"
+            exit 1
+        fi
+    fi
+
     # Create worktree with branch
     if branch_exists "$branch_name"; then
         log_warn "Branch already exists: $branch_name"
         log_info "Creating worktree from existing branch..."
         git worktree add "$worktree_path" "$branch_name"
     else
-        local main_branch
-        main_branch="$(get_main_branch)" || exit 1
-
         log_info "Creating worktree: $worktree_path"
-        log_info "Branch: $branch_name (from $main_branch)"
-        git worktree add -b "$branch_name" "$worktree_path" "$main_branch"
+        log_info "Branch: $branch_name (from $base_branch)"
+        git worktree add -b "$branch_name" "$worktree_path" "$base_branch"
     fi
 
     # Parse task groups if change is specified
@@ -115,11 +129,11 @@ main() {
 
     # Initialize state
     create_feature_dir "$feature"
-    init_state "$feature" "$branch_name" "$change" "$groups_json"
+    init_state "$feature" "$branch_name" "$change" "$groups_json" "$base_branch"
 
     log_success "Feature created: $feature"
     log_info "Worktree: $worktree_path"
-    log_info "Branch: $branch_name"
+    log_info "Branch: $branch_name (base: $base_branch)"
     if [[ -n "$change" ]]; then
         log_info "Change: $change"
     fi

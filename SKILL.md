@@ -13,7 +13,7 @@ AWP automates feature development workflows. Each feature gets one worktree and 
 |---------|-------------|
 | `/awp-propose` | Propose — design, specs, tasks, auto-create feature |
 | `/awp-apply` | Apply — review tasks, confirm, execute via openspec-apply |
-| `/awp-merge` | Merge — rebase main, merge, archive, clean up |
+| `/awp-merge` | Merge — rebase base branch, merge, archive, clean up |
 | `/awp-delete` | Delete — discard feature + change artifacts |
 | `/awp-status` | Status — show all features with group/status |
 | `/awp-explore` | Explore — think through ideas before proposing |

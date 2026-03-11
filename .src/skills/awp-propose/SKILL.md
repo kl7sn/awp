@@ -3,26 +3,40 @@ name: awp-propose
 description: "Propose a new feature with design, specs, and tasks. Use when users say: awp propose, propose a feature, 提出一个新功能."
 ---
 
-# awp propose "<description>"
+# awp propose "<description>" [--base <branch>]
 
 Generate a feature proposal with design, specs, tasks, then auto-create the feature.
 
-**Implementation:**
-1. Derive a kebab-case change name from the description
-2. Call OpenSpec CLI to create change and generate artifacts:
+## Base Branch Resolution
+
+- If user specifies a branch (e.g., `awp propose "auth" --base develop`), use that branch
+- If not specified, `create-feature.sh` defaults to the **current branch** (`git rev-parse --abbrev-ref HEAD`)
+- The base branch is saved in `state.json` and used by `awp merge` as the merge target
+
+## Implementation
+
+1. Parse user input:
+   - Extract the feature description
+   - Extract `--base <branch>` if provided
+2. Derive a kebab-case change name from the description
+3. Call OpenSpec CLI to create change and generate artifacts:
    ```bash
    openspec new change "<change-name>"
    openspec status --change "<change-name>" --json
    openspec instructions <artifact-id> --change "<change-name>" --json
    ```
-3. Generate artifacts in dependency order: proposal.md -> design.md -> specs/*.md -> tasks.md
-4. Store artifacts in `openspec/changes/<change-name>/`
-5. Auto-create the feature:
+4. Generate artifacts in dependency order: proposal.md -> design.md -> specs/*.md -> tasks.md
+5. Store artifacts in `openspec/changes/<change-name>/`
+6. Auto-create the feature:
    ```bash
+   # Without --base: uses current branch as base
    bash ~/.claude/skills/awp/.src/scripts/create-feature.sh "<change-name>"
+
+   # With --base: uses specified branch
+   bash ~/.claude/skills/awp/.src/scripts/create-feature.sh "<change-name>" --base <branch>
    ```
 
-**Result:** Change name = feature name = branch name. Ready for `awp run`.
+**Result:** Change name = feature name = branch name. Ready for `awp apply`.
 
 ## Artifact Creation Guidelines
 

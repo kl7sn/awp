@@ -5,6 +5,7 @@ A Claude Code skill that automates feature development workflows. AWP unifies fe
 ## Key Concepts
 
 - **1 feature = 1 branch = 1 worktree** — clean isolation, unified naming
+- **Configurable base branch** — features branch from current branch by default, merge back to it, then PR to main
 - **Executor reviews before implementing** — presents task summary, waits for your confirmation, then executes
 - **Task groups drive execution** — each `## N. Title` section in tasks.md is an independently reviewable unit
 - **Unified command system** — `awp` is the single entry point for planning, execution, and delivery
@@ -23,9 +24,10 @@ awp init
 
 ```
 awp explore                              # Think through ideas (optional)
-awp propose "user authentication"        # Design + specs + tasks + auto-create
-awp apply auth                             # Execute task groups (review → confirm → implement)
-awp merge auth                           # Rebase + merge + cleanup
+awp propose "user authentication"        # Design + specs + tasks + auto-create (base: current branch)
+awp propose "auth" --base develop        # Same, but branch from develop
+awp apply auth                           # Execute task groups (review → confirm → implement)
+awp merge auth                           # Rebase + merge to base branch + cleanup
 ```
 
 ```
@@ -64,10 +66,10 @@ awp propose
 
 | Command | Description |
 |---------|-------------|
-| `awp propose "<description>"` | Generate design, specs, and task breakdown |
-| `awp create <feature> [--change <name>]` | Create worktree + branch, link to change |
+| `awp propose "<description>" [--base <branch>]` | Generate design, specs, and task breakdown |
+| `awp create <feature> [--change <name>] [--base <branch>]` | Create worktree + branch, link to change |
 | `awp apply <feature>` | Execute task groups with review and confirmation |
-| `awp merge <feature>` | Rebase main, merge, clean up |
+| `awp merge <feature>` | Rebase onto base branch, merge, clean up |
 | `awp delete <feature> [--force]` | Discard feature (worktree + branch + state) |
 | `awp status` | Show all features with group progress and status |
 | `awp explore` | Think through ideas before proposing |
@@ -88,7 +90,7 @@ payment-flow         2/3      done         payment-flow
 user-profile         1/1      done         user-profile
 ```
 
-Merge order is up to you. Before merging, AWP rebases onto main. If conflicts arise, resolve them and re-run.
+Merge order is up to you. Before merging, AWP rebases onto the feature's base branch. If conflicts arise, resolve them and re-run. After all features are merged, create a PR from the base branch to main.
 
 ## Directory Structure
 
