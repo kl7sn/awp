@@ -56,13 +56,13 @@ bash .claude/skills/awp/.src/scripts/create-feature.sh "<change-name>"
 Feature is ready to run immediately:
 
 ```
-awp run <change-name>
+awp apply <change-name>
 ```
 
 ## Notes
 
 - Replaces `opsx:propose`
 - Change name = feature name = branch name (unified naming)
-- Task groups (## headings) in tasks.md define the TDD cycle boundaries
+- Task groups (## headings) in tasks.md define the execution group boundaries
 - Each group should be a cohesive, independently verifiable unit of work
 - If auto-create fails (e.g., branch conflict), artifacts are still preserved — run `awp create` manually

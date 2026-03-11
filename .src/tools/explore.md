@@ -29,5 +29,5 @@ This is a skill-layer command. No shell script is needed — the skill handles t
 
 - Replaces `opsx:explore`
 - No state changes or file modifications
-- Can be used before `awp propose` or during `awp run`
+- Can be used before `awp propose` or during `awp apply`
 - Exit explore mode by starting a concrete action (propose, create, run)

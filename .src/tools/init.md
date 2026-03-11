@@ -15,7 +15,7 @@ Initialize AWP (Multi-Agent Worktree Project) in the current project.
 ## What it does
 
 1. Creates the `agents/` directory in the skill root
-2. Copies default agent templates (developer, tester, reviewer) from `.src/templates/agents/`
+2. Copies default agent template (executor) from `.src/templates/agents/`
 3. Creates the `.state/` directory for internal state
 4. Generates the `SKILL.md` routing file with command documentation
 

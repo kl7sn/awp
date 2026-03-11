@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# status-features.sh - Show all features and their TDD pipeline status (AWP v2)
+# status-features.sh - Show all features and their status (AWP v2)
 
 set -euo pipefail
 
@@ -18,18 +18,17 @@ main() {
     fi
 
     # Print table header
-    printf "%-20s %-8s %-12s %-6s %-20s\n" "FEATURE" "GROUP" "PHASE" "CYCLE" "BRANCH"
-    printf "%-20s %-8s %-12s %-6s %-20s\n" "-------" "-----" "-----" "-----" "------"
+    printf "%-20s %-8s %-10s %-20s\n" "FEATURE" "GROUP" "STATUS" "BRANCH"
+    printf "%-20s %-8s %-10s %-20s\n" "-------" "-----" "------" "------"
 
     while IFS= read -r feature; do
         local state
         state="$(read_state "$feature" 2>/dev/null)" || continue
 
-        local phase current_group total_groups cycle branch
-        phase="$(echo "$state" | jq -r '.phase')"
+        local status current_group total_groups branch
+        status="$(echo "$state" | jq -r '.status')"
         current_group="$(echo "$state" | jq -r '.current_group')"
         total_groups="$(echo "$state" | jq '.groups | length')"
-        cycle="$(echo "$state" | jq -r '.cycle')"
         branch="$(echo "$state" | jq -r '.branch')"
 
         local group_display
@@ -39,7 +38,7 @@ main() {
             group_display="${current_group}/${total_groups}"
         fi
 
-        printf "%-20s %-8s %-12s %-6s %-20s\n" "$feature" "$group_display" "$phase" "$cycle" "$branch"
+        printf "%-20s %-8s %-10s %-20s\n" "$feature" "$group_display" "$status" "$branch"
     done <<< "$features"
 }
 

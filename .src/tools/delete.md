@@ -45,6 +45,5 @@ bash .claude/skills/awp/.src/scripts/delete-feature.sh config-page
 ## Notes
 
 - Usable at any stage (test, implement, review, approved)
-- No longer requires agent name (v1: `awp delete feat developer`)
 - Use `--force` to bypass uncommitted changes check
 - Does not remove `.awp/changes/` artifacts (proposal/design/specs remain)

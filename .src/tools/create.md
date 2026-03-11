@@ -51,5 +51,4 @@ bash .claude/skills/awp/.src/scripts/create-feature.sh config-page --change conf
 ## Notes
 
 - Creates exactly 1 worktree per feature (not 3 like v1)
-- Agent roles (tester/developer/reviewer) are pipeline stages, not separate worktrees
 - Feature state is stored in `.awp/features/`, separate from the worktree

@@ -8,7 +8,7 @@ Merge an approved feature branch back to the main branch, with rebase and cleanu
 
 ## Use when
 
-- Feature has reached `approved` state after `awp run`
+- Feature has reached `approved` state after `awp apply`
 - User requests "awp merge <feature-name>"
 - Ready to integrate a completed feature
 
@@ -42,13 +42,12 @@ bash .claude/skills/awp/.src/scripts/merge-feature.sh config-page
 
 ## Failure fallback
 
-1. **Not approved**: Run `awp run <feature>` to complete TDD pipeline
+1. **Not done**: Run `/awp-apply <feature>` to complete all task groups
 2. **Uncommitted changes**: Commit or stash before merging
-3. **Rebase conflicts**: Resolve conflicts, then re-run merge (may need `awp run` to re-verify)
+3. **Rebase conflicts**: Resolve conflicts, then re-run merge (may need `awp apply` to re-verify)
 
 ## Notes
 
-- No longer requires agent name (v1: `awp merge feat developer`)
 - Rebases before merge to ensure clean history
-- If rebase conflicts occur after resolution, consider re-running `awp run` from tester to verify tests still pass
+- If rebase conflicts occur after resolution, consider re-running `/awp-merge`
 - Replaces the archive step of `opsx:archive`

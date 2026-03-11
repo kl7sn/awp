@@ -54,12 +54,12 @@ main() {
     else
         cat > "$skill_md" << 'EOF'
 ---
-description: AWP - Feature-driven TDD automation with unified propose/create/run/merge pipeline
+description: AWP - Feature-driven automation with unified propose/run/merge pipeline
 ---
 
-# AWP: Feature-Driven TDD Pipeline
+# AWP: Feature-Driven Pipeline
 
-This skill manages feature development with automated TDD pipelines. Each feature gets one worktree and one branch. Agent roles (tester, developer, reviewer) are pipeline stages, not separate workspaces.
+This skill manages feature development with automated pipelines. Each feature gets one worktree and one branch. The executor agent reviews and implements tasks group by group.
 
 ## Commands
 
@@ -78,20 +78,19 @@ Create a worktree and branch for a feature.
 bash .claude/skills/awp/.src/scripts/create-feature.sh <feature-name> [--change <change-name>]
 ```
 
-### awp run <feature-name>
+### awp apply <feature-name>
 
-Run the TDD pipeline (tester → developer → reviewer) for a feature.
+Review and execute tasks for a feature, group by group.
 
 **Execution:**
 ```bash
-bash .claude/skills/awp/.src/scripts/run-feature.sh <feature-name>
-bash .claude/skills/awp/.src/scripts/run-feature.sh <feature-name> --advance
-bash .claude/skills/awp/.src/scripts/run-feature.sh <feature-name> --reject
+bash .claude/skills/awp/.src/scripts/apply-feature.sh <feature-name>
+bash .claude/skills/awp/.src/scripts/apply-feature.sh <feature-name> --next
 ```
 
 ### awp merge <feature-name>
 
-Merge an approved feature to main.
+Merge a completed feature to main.
 
 **Execution:**
 ```bash
@@ -109,7 +108,7 @@ bash .claude/skills/awp/.src/scripts/delete-feature.sh <feature-name>
 
 ### awp status
 
-Show all features and their TDD pipeline status.
+Show all features and their execution status.
 
 **Execution:**
 ```bash
@@ -140,11 +139,9 @@ Upgrade AWP to the latest version from git.
 bash .claude/skills/awp/.src/scripts/run-upgrade.sh
 ```
 
-## Pipeline Stages
+## Agent
 
-- **tester**: Writes tests first (TDD red phase)
-- **developer**: Implements code to pass tests (TDD green phase)
-- **reviewer**: Audits changes, approves or rejects (sends back to tester)
+- **executor**: Reviews tasks for quality, presents summary to user, implements after confirmation
 
 ## Directory Structure
 
@@ -152,7 +149,7 @@ bash .claude/skills/awp/.src/scripts/run-upgrade.sh
 project-root/
 ├── .awp/
 │   ├── changes/       # OpenSpec artifacts (proposal, design, specs, tasks)
-│   └── features/      # Runtime state (state.json, review-feedback.md)
+│   └── features/      # Runtime state (state.json)
 ├── worktrees/         # Git worktrees (1 per feature)
 └── .claude/skills/awp/
     ├── .src/          # System files
@@ -162,15 +159,34 @@ project-root/
 ## Workflow
 
 1. Propose: `awp propose "feature description"`
-2. Create: `awp create my-feature --change my-feature`
-3. Run: `awp run my-feature` (TDD pipeline)
-4. Merge: `awp merge my-feature`
+2. Run: `awp apply my-feature` (executor pipeline)
+3. Merge: `awp merge my-feature`
 EOF
         log_success "Generated SKILL.md routing file"
     fi
 
+    # Install sub-skill symlinks
+    local skills_src="$skill_root/.src/skills"
+    local skills_dst
+    skills_dst="$(dirname "$skill_root")"  # ~/.claude/skills/
+
+    if [[ -d "$skills_src" ]]; then
+        for skill_dir in "$skills_src"/*/; do
+            if [[ -f "$skill_dir/SKILL.md" ]]; then
+                local skill_name
+                skill_name="$(basename "$skill_dir")"
+                local target="$skills_dst/$skill_name"
+                if [[ -L "$target" ]]; then
+                    rm "$target"
+                fi
+                ln -sfn "$skill_dir" "$target"
+                log_success "Linked skill: /$(echo "$skill_name" | sed 's/^awp-/awp-/')"
+            fi
+        done
+    fi
+
     log_success "AWP initialization complete!"
-    log_info "Use 'awp propose' to start a new feature or 'awp create <name>' to begin"
+    log_info "Available commands: /awp-propose, /awp-apply, /awp-merge, /awp-status, etc."
 }
 
 main "$@"

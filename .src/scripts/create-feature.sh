@@ -67,7 +67,7 @@ main() {
     # Check if feature already exists
     if feature_exists "$feature"; then
         log_error "Feature already exists: $feature"
-        log_error "Use 'awp run $feature' to continue or 'awp delete $feature' to remove"
+        log_error "Use 'awp apply $feature' to continue or 'awp delete $feature' to remove"
         exit 1
     fi
 
@@ -123,7 +123,7 @@ main() {
     if [[ -n "$change" ]]; then
         log_info "Change: $change"
     fi
-    log_info "Use 'awp run $feature' to start the TDD pipeline"
+    log_info "Use '/awp-apply $feature' to start executing tasks"
 }
 
 main "$@"

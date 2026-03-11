@@ -4,7 +4,7 @@ description: Show status of all active features
 
 # awp status
 
-Display a table of all active features with their TDD pipeline status.
+Display a table of all active features with their execution status.
 
 ## Use when
 
@@ -15,7 +15,7 @@ Display a table of all active features with their TDD pipeline status.
 ## What it does
 
 1. Scans `.awp/features/*/state.json`
-2. Displays a table with columns: FEATURE, GROUP, PHASE, CYCLE, BRANCH
+2. Displays a table with columns: FEATURE, GROUP, STATUS, BRANCH
 
 ## Standard execution
 
@@ -26,15 +26,14 @@ bash .claude/skills/awp/.src/scripts/status-features.sh
 ## Output example
 
 ```
-FEATURE              GROUP    PHASE        CYCLE  BRANCH
--------              -----    -----        -----  ------
-config-page          1/2      implement    1      config-page
-auth-system          2/3      review       2      auth-system
-user-profile         1/1      approved     1      user-profile
+FEATURE              GROUP    STATUS       BRANCH
+-------              -----    ------       ------
+config-page          1/2      running      config-page
+auth-system          2/3      done         auth-system
+user-profile         1/1      approved     user-profile
 ```
 
 ## Notes
 
-- Shows all features regardless of phase
+- Shows all features regardless of status
 - GROUP column shows current/total task groups
-- CYCLE shows how many TDD iterations the current group has gone through

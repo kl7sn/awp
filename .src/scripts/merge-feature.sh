@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# merge-feature.sh - Merge an approved feature to main (AWP v2)
+# merge-feature.sh - Merge a completed feature to main (AWP v2)
 
 set -euo pipefail
 
@@ -10,13 +10,13 @@ usage() {
     cat << EOF
 Usage: $0 <feature-name>
 
-Merge an approved feature branch back to the main branch.
+Merge a completed feature branch back to the main branch.
 
 Arguments:
   feature-name    Name of the feature to merge
 
 Prerequisites:
-  Feature must be in 'approved' state (run 'awp run' first).
+  Feature must be in 'done' state (run '/awp-apply' first).
 
 Example:
   $0 config-page
@@ -39,12 +39,12 @@ main() {
         exit 1
     fi
 
-    # Check state is approved
-    local phase
-    phase="$(read_state_field "$feature" '.phase')"
-    if [[ "$phase" != "approved" ]]; then
-        log_error "Feature is not approved (current phase: $phase)"
-        log_error "Run 'awp run $feature' to complete the TDD pipeline first"
+    # Check state is done
+    local status
+    status="$(read_state_field "$feature" '.status')"
+    if [[ "$status" != "done" ]]; then
+        log_error "Feature is not done (current status: $status)"
+        log_error "Run '/awp-apply $feature' to complete all task groups first"
         exit 1
     fi
 
@@ -78,7 +78,7 @@ main() {
         (cd "$worktree_path" && git rebase "$main_branch") || {
             log_error "Rebase failed. Conflicts detected."
             log_error "Resolve conflicts in $worktree_path, then re-run 'awp merge $feature'"
-            log_warn "After resolving, you may need to re-run 'awp run $feature' to verify tests pass"
+            log_warn "After resolving, re-run '/awp-merge $feature'"
             (cd "$worktree_path" && git rebase --abort 2>/dev/null || true)
             exit 1
         }

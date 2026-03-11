@@ -11,7 +11,7 @@
     ".src/scripts/lib.sh",
     ".src/scripts/init-project-data.sh",
     ".src/scripts/create-feature.sh",
-    ".src/scripts/run-feature.sh",
+    ".src/scripts/apply-feature.sh",
     ".src/scripts/merge-feature.sh",
     ".src/scripts/delete-feature.sh",
     ".src/scripts/status-features.sh",
@@ -24,9 +24,7 @@
     ".awp"
   ],
   "agent_roles": [
-    "tester",
-    "developer",
-    "reviewer"
+    "executor"
   ],
-  "agent_roles_note": "Pipeline stages in TDD cycle order: tester writes tests, developer implements, reviewer audits"
+  "agent_roles_note": "Executor reviews tasks and implements them after user confirmation"
 }

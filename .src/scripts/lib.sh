@@ -145,12 +145,6 @@ state_file() {
     echo "$(feature_state_dir "$feature")/state.json"
 }
 
-# Get the review-feedback.md path for a feature
-review_feedback_file() {
-    local feature="$1"
-    echo "$(feature_state_dir "$feature")/review-feedback.md"
-}
-
 # Read state.json for a feature (outputs JSON to stdout)
 read_state() {
     local feature="$1"
@@ -214,8 +208,7 @@ init_state() {
     local json
     json=$(cat <<EOF
 {
-  "phase": "test",
-  "cycle": 1,
+  "status": "pending",
   "current_group": 1,
   "groups": $groups_json,
   "branch": "$branch",
