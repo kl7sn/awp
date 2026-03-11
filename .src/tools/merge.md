@@ -14,13 +14,14 @@ Merge an approved feature branch back to the main branch, with rebase and cleanu
 
 ## What it does
 
-1. Verifies feature state is `approved`
+1. Verifies feature state is `done`
 2. Rebases the feature branch onto the latest main
 3. If rebase conflicts: aborts and prompts for resolution
 4. Merges to main (fast-forward preferred, no-ff fallback)
 5. Removes the worktree
 6. Deletes the feature branch
 7. Cleans up `.awp/features/<feature>/`
+8. Archives the change via `openspec archive` (if linked to a change)
 
 ## Standard execution
 
@@ -39,6 +40,7 @@ bash .claude/skills/awp/.src/scripts/merge-feature.sh config-page
 - Worktree removed
 - Branch deleted
 - Feature state cleaned up
+- Change archived via openspec (if applicable)
 
 ## Failure fallback
 
@@ -50,4 +52,5 @@ bash .claude/skills/awp/.src/scripts/merge-feature.sh config-page
 
 - Rebases before merge to ensure clean history
 - If rebase conflicts occur after resolution, consider re-running `/awp-merge`
-- Replaces the archive step of `opsx:archive`
+- Calls `openspec archive --change <name>` after merge to archive change artifacts
+- If openspec is not installed, logs a warning with the manual archive command

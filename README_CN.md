@@ -95,15 +95,16 @@ user-profile         1/1      done         user-profile
 ```
 项目根目录/
 ├── .awp/
-│   ├── changes/                 # 提案、设计、规格、任务
-│   │   └── <change-name>/
-│   │       ├── proposal.md
-│   │       ├── design.md
-│   │       ├── specs/
-│   │       └── tasks.md
 │   └── features/                # 每个 feature 的运行状态
 │       └── <feature>/
 │           └── state.json
+├── openspec/
+│   └── changes/                 # 提案、设计、规格、任务
+│       └── <change-name>/
+│           ├── proposal.md
+│           ├── design.md
+│           ├── specs/
+│           └── tasks.md
 ├── worktrees/                   # Git worktree（每个 feature 一个）
 │   └── <feature>/
 └── agents/                      # Agent prompt 模板

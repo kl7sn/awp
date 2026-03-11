@@ -113,16 +113,23 @@ main() {
         }
     fi
 
+    # Read change name before removing feature state
+    local change
+    change="$(read_state_field "$feature" '.change' 2>/dev/null || echo "null")"
+
     # Cleanup: remove feature state
     remove_feature_dir "$feature"
 
-    # Archive change if it was from openspec
-    local change
-    change="$(read_state_field "$feature" '.change' 2>/dev/null || echo "null")"
+    # Archive change via openspec
     if [[ "$change" != "null" ]] && [[ -n "$change" ]]; then
         log_info "Archiving change: $change"
-        # The actual archive is handled by openspec CLI or manually
-        log_info "Change artifacts remain at: $(changes_dir)/$change/"
+        if command -v openspec &>/dev/null; then
+            openspec archive --change "$change" || {
+                log_warn "openspec archive failed. Archive manually: openspec archive --change $change"
+            }
+        else
+            log_warn "openspec not found, skipping archive. Run manually: openspec archive --change $change"
+        fi
     fi
 
     log_success "Feature '$feature' merged and cleaned up!"

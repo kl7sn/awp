@@ -45,7 +45,6 @@ main() {
 
     # Create .awp directories
     ensure_dir "$proj_root/.awp/features"
-    ensure_dir "$proj_root/.awp/changes"
 
     # Generate SKILL.md routing file
     local skill_md="$skill_root/SKILL.md"
@@ -148,8 +147,9 @@ bash .claude/skills/awp/.src/scripts/run-upgrade.sh
 ```
 project-root/
 ├── .awp/
-│   ├── changes/       # OpenSpec artifacts (proposal, design, specs, tasks)
 │   └── features/      # Runtime state (state.json)
+├── openspec/
+│   └── changes/       # OpenSpec artifacts (proposal, design, specs, tasks)
 ├── worktrees/         # Git worktrees (1 per feature)
 └── .claude/skills/awp/
     ├── .src/          # System files

@@ -14,6 +14,6 @@ bash ~/.claude/skills/awp/.src/scripts/delete-feature.sh <feature-name> [--force
 
 **Flags:**
 - `--force` — force delete even with uncommitted changes
-- `--keep-change` — preserve `.awp/changes/<name>/` artifacts (proposal, design, specs, tasks)
+- `--keep-change` — preserve `openspec/changes/<name>/` artifacts (proposal, design, specs, tasks)
 
 **Confirm before executing** — this is a destructive action.

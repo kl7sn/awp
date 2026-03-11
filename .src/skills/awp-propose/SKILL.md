@@ -16,7 +16,7 @@ Generate a feature proposal with design, specs, tasks, then auto-create the feat
    openspec instructions <artifact-id> --change "<change-name>" --json
    ```
 3. Generate artifacts in dependency order: proposal.md -> design.md -> specs/*.md -> tasks.md
-4. Store artifacts in `.awp/changes/<change-name>/`
+4. Store artifacts in `openspec/changes/<change-name>/`
 5. Auto-create the feature:
    ```bash
    bash ~/.claude/skills/awp/.src/scripts/create-feature.sh "<change-name>"

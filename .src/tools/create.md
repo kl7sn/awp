@@ -18,7 +18,7 @@ Create a git worktree and branch for a feature, with optional OpenSpec change as
 2. Creates a single git worktree at `worktrees/<feature>/`
 3. Creates a branch named `<feature>` from the main branch
 4. If `--change` is specified:
-   - Reads `.awp/changes/<change-name>/tasks.md`
+   - Reads `openspec/changes/<change-name>/tasks.md`
    - Parses task groups from `## N. Title` headings
    - Initializes state.json with groups and task references
 5. Creates `.awp/features/<feature>/state.json` with initial state

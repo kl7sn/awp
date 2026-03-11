@@ -15,7 +15,7 @@ Generate a complete feature proposal with design, specifications, and implementa
 ## What it does
 
 1. Derives a kebab-case change name from the description
-2. Creates a change directory at `.awp/changes/<change-name>/`
+2. Creates a change directory at `openspec/changes/<change-name>/`
 3. Generates artifacts in sequence:
    - `proposal.md` — motivation and scope
    - `design.md` — technical decisions
@@ -45,7 +45,7 @@ bash .claude/skills/awp/.src/scripts/create-feature.sh "<change-name>"
 
 ## Success indicators
 
-- Change directory created at `.awp/changes/<change-name>/`
+- Change directory created at `openspec/changes/<change-name>/`
 - All artifacts generated: proposal.md, design.md, specs/*.md, tasks.md
 - Worktree created at `worktrees/<change-name>/`
 - Branch created: `<change-name>`

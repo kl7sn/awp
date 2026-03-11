@@ -23,7 +23,7 @@ Review and execute tasks for a feature, group by group.
 3. **Load executor agent**: Read `agents/executor/prompt.md` from the skill root.
 
 4. **Review current task group**:
-   - Read context files from `.awp/changes/<change>/` (proposal.md, design.md, specs/, tasks.md)
+   - Read context files from `openspec/changes/<change>/` (proposal.md, design.md, specs/, tasks.md)
    - Analyze the current group's tasks: scope, dependencies, risks
    - Present summary to user:
      ```

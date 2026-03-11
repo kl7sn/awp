@@ -46,4 +46,4 @@ bash .claude/skills/awp/.src/scripts/delete-feature.sh config-page
 
 - Usable at any stage (test, implement, review, approved)
 - Use `--force` to bypass uncommitted changes check
-- Does not remove `.awp/changes/` artifacts (proposal/design/specs remain)
+- Does not remove `openspec/changes/` artifacts (proposal/design/specs remain)

@@ -12,4 +12,4 @@ Initialize AWP in the current project.
 bash ~/.claude/skills/awp/.src/scripts/init-project-data.sh
 ```
 
-Creates `.awp/features/` and `.awp/changes/` directories, copies agent templates, and sets up the project for AWP workflows.
+Creates `.awp/features/` directory, copies agent templates, and sets up the project for AWP workflows. Change artifacts are managed by OpenSpec in `openspec/changes/`.

@@ -128,9 +128,11 @@ features_dir() {
     echo "$(awp_dir)/features"
 }
 
-# Get the changes directory
+# Get the changes directory (openspec/changes in project root)
 changes_dir() {
-    echo "$(awp_dir)/changes"
+    local proj_root
+    proj_root="$(project_root)" || return 1
+    echo "$proj_root/openspec/changes"
 }
 
 # Get a specific feature's state directory
@@ -322,7 +324,7 @@ feature_exists() {
 # AWP v2: Changes directory management
 # ============================================================
 
-# Create changes directory for a change
+# Create changes directory for a change (in openspec/changes)
 create_change_dir() {
     local change_name="$1"
     ensure_dir "$(changes_dir)/$change_name"

@@ -95,15 +95,16 @@ Merge order is up to you. Before merging, AWP rebases onto main. If conflicts ar
 ```
 project-root/
 ├── .awp/
-│   ├── changes/                 # Proposals, designs, specs, tasks
-│   │   └── <change-name>/
-│   │       ├── proposal.md
-│   │       ├── design.md
-│   │       ├── specs/
-│   │       └── tasks.md
 │   └── features/                # Runtime state per feature
 │       └── <feature>/
 │           └── state.json
+├── openspec/
+│   └── changes/                 # Proposals, designs, specs, tasks
+│       └── <change-name>/
+│           ├── proposal.md
+│           ├── design.md
+│           ├── specs/
+│           └── tasks.md
 ├── worktrees/                   # Git worktrees (1 per feature)
 │   └── <feature>/
 └── agents/                      # Agent prompt templates
