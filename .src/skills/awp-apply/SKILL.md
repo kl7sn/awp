@@ -13,6 +13,7 @@ Review and execute tasks for a feature, group by group.
    ```bash
    bash ~/.claude/skills/awp/.src/scripts/apply-feature.sh <feature-name>
    ```
+   This returns JSON with: feature, status, current_group, total_groups, group_name, worktree, change, base_branch, groups.
 
 2. **Switch to worktree** — ALL file operations MUST happen inside the worktree:
    ```bash
@@ -22,39 +23,28 @@ Review and execute tasks for a feature, group by group.
 
 3. **Load executor agent**: Read `agents/executor/prompt.md` from the skill root.
 
-4. **Review current task group**:
-   - Read context files from `openspec/changes/<change>/` (proposal.md, design.md, specs/, tasks.md)
-   - Analyze the current group's tasks: scope, dependencies, risks
-   - Present summary to user:
-     ```
-     ## Task Group N: <group-name>
+4. **Read context from `openspec/changes/<change>/`** (in the project root, NOT in `.awp/`):
+   - proposal.md, design.md, specs/, tasks.md
+   - These files live at `<project-root>/openspec/changes/<state.change>/`
 
-     **Tasks:**
-     1. <task>
-     2. <task>
-     ...
+5. **Review current task group** and assess risk:
+   - **Low risk** (new files, tests, config, docs, clear-cut CRUD): show brief summary, auto-execute
+   - **High risk** (deleting/renaming code, changing APIs, security, migrations, ambiguous tasks): show full summary, wait for confirmation
 
-     **Scope:** <expected changes>
-     **Concerns:** <risks or "None">
+6. **Execute tasks** in the worktree:
+   - Implement each task one by one
+   - All code changes happen in the worktree directory
+   - After completing each task, mark it in `<project-root>/openspec/changes/<change>/tasks.md`: `- [ ]` → `- [x]`
+   - IMPORTANT: Do NOT create or write to `.awp/changes/` — the only tasks.md is in `openspec/changes/`
 
-     Proceed with execution?
-     ```
-
-5. **Wait for user confirmation**. Do NOT execute without explicit approval.
-
-6. **On confirmation**: Invoke `openspec-apply` to execute tasks in the worktree:
-   - The change name is in `state.change`
-   - openspec-apply reads tasks.md and implements them one by one
-   - All work happens in the worktree directory
-
-7. **After group completes**: Advance to next group:
+8. **After group completes**: Advance to next group:
    ```bash
    bash ~/.claude/skills/awp/.src/scripts/apply-feature.sh <feature-name> --next
    ```
 
-8. **Repeat** from step 1 for the next group until all groups are done (status = "done").
+9. **Repeat** from step 1 for the next group until all groups are done (status = "done").
 
-9. When done, inform user they can merge:
-   ```
-   All groups complete! Use /awp-merge <feature-name> to merge.
-   ```
+10. When done, inform user they can merge:
+    ```
+    All groups complete! Use /awp-merge <feature-name> to merge.
+    ```
